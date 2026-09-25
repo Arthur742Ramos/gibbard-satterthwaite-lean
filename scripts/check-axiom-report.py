@@ -13,21 +13,9 @@ try:
 except (OSError, UnicodeError, json.JSONDecodeError) as error:
     raise SystemExit(f"error: invalid Comparator config: {error}")
 
-required = set(config.get("theorem_names", [])) | set(config.get("definition_names", [])) | {
-    "Arrow.Ballot",
-    "Arrow.ranksAbove",
-    "Arrow.Profile",
-    "Arrow.SWF",
-    "Arrow.Unanimous",
-    "Arrow.IIA",
-    "Arrow.DecisivePair",
-    "Arrow.Decisive",
-    "Arrow.IsDictator",
-    "Arrow.Palomar.decisiveUniv",
-    "Arrow.Palomar.fieldExpansion",
-    "Arrow.Palomar.groupContraction",
-    "Arrow.Palomar.arrowImpossibility",
-}
+# The comparator names are the required core; the Arrow support vocabulary
+# (Ballot, ranksAbove, Profile) is audited in the arrow-impossibility-lean repo.
+required = set(config.get("theorem_names", [])) | set(config.get("definition_names", []))
 allowed = set(config.get("permitted_axioms", []))
 expected_allowed = {"propext", "Quot.sound", "Classical.choice"}
 if allowed != expected_allowed:
@@ -46,7 +34,7 @@ for line in text.splitlines():
         name, body = match.groups()
         if name in seen:
             raise SystemExit(f"error: duplicate axiom report for {name}")
-        if not name.startswith("Arrow."):
+        if not name.startswith("GibbardSatterthwaite."):
             raise SystemExit(f"error: unexpected declaration in library audit: {name}")
         seen.add(name)
         used_axioms.update(axiom.strip() for axiom in body.split(",") if axiom.strip())
@@ -79,6 +67,6 @@ if used_axioms != expected_allowed:
     )
 
 print(
-    f"Axiom audit passed for all {len(seen)} Arrow declarations; "
+    f"Axiom audit passed for all {len(seen)} GibbardSatterthwaite declarations; "
     f"exact axiom set: {', '.join(sorted(used_axioms))}."
 )

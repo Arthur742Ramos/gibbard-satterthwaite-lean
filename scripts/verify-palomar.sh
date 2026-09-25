@@ -91,21 +91,13 @@ required_keys = {
 if not isinstance(comparator, dict) or set(comparator) != required_keys:
     raise SystemExit("error: comparator.json has an invalid key set")
 expected_theorems = [
-    "Arrow.Palomar.decisiveUniv",
-    "Arrow.Palomar.fieldExpansion",
-    "Arrow.Palomar.groupContraction",
-    "Arrow.Palomar.arrowImpossibility",
+    "GibbardSatterthwaite.gibbardSatterthwaite",
 ]
 expected_definitions = [
-    "Arrow.Ballot",
-    "Arrow.ranksAbove",
-    "Arrow.Profile",
-    "Arrow.SWF",
-    "Arrow.Unanimous",
-    "Arrow.IIA",
-    "Arrow.DecisivePair",
-    "Arrow.Decisive",
-    "Arrow.IsDictator",
+    "GibbardSatterthwaite.SCF",
+    "GibbardSatterthwaite.StrategyProof",
+    "GibbardSatterthwaite.Onto",
+    "GibbardSatterthwaite.Dictatorial",
 ]
 if comparator["challenge_module"] != "Challenge" or comparator["solution_module"] != "Solution":
     raise SystemExit("error: Comparator modules must be Challenge and Solution")
@@ -126,8 +118,8 @@ imports = [line for line in challenge_text.splitlines() if line.startswith("impo
 if not imports or any(not line.startswith("import Mathlib.") for line in imports):
     raise SystemExit(f"error: Challenge imports must come only from Mathlib: {imports}")
 challenge_holes = len(re.findall(r"\bsorry\b", challenge_text))
-if challenge_holes != 4:
-    raise SystemExit(f"error: expected exactly four deliberate Challenge statement sorries, found {challenge_holes}")
+if challenge_holes != 1:
+    raise SystemExit(f"error: expected exactly one deliberate Challenge statement sorry, found {challenge_holes}")
 if re.search(r"\b(admit|oops)\b|^\s*(axiom|unsafe)\b", challenge_text, re.MULTILINE):
     raise SystemExit("error: Challenge.lean contains an undeclared placeholder, axiom, or unsafe declaration")
 
@@ -135,9 +127,9 @@ solution = (root / "Solution.lean").read_text(encoding="utf-8")
 if re.search(r"\b(sorry|admit|oops)\b|^\s*(axiom|unsafe)\b", solution, re.MULTILINE):
     raise SystemExit("error: Solution.lean contains a proof placeholder, axiom, or unsafe declaration")
 
-library_files = sorted((root / "Arrow").rglob("*.lean"))
+library_files = sorted((root / "GS").rglob("*.lean")) + sorted((root / "Arrow").rglob("*.lean"))
 if not library_files:
-    raise SystemExit("error: Arrow library has no Lean modules")
+    raise SystemExit("error: GS/Arrow library has no Lean modules")
 for path in library_files:
     source = path.read_text(encoding="utf-8")
     if re.search(r"\b(sorry|admit|oops)\b|^\s*axiom\b", source, re.MULTILINE):
@@ -171,13 +163,19 @@ if not isinstance(sources, list) or not sources:
 valid_relationships = {"formalizes", "adapts", "independently-proves", "background"}
 if any(not isinstance(source, dict) or source.get("relationship") not in valid_relationships for source in sources):
     raise SystemExit("error: formalization.yaml contains an invalid source relationship")
-arrow_doi = "https://doi.org/10.1086/256963"
-if not any(
-    source.get("relationship") in {"formalizes", "adapts", "independently-proves"}
-    and arrow_doi in (source.get("id"), source.get("location"))
-    for source in sources
+formalizes_dois = {
+    "https://doi.org/10.2307/1914083",      # Gibbard 1973
+    "https://doi.org/10.1016/0022-0531(75)90002-6",  # Satterthwaite 1975
+}
+if not all(
+    any(
+        source.get("relationship") in {"formalizes", "adapts", "independently-proves"}
+        and doi in (source.get("id"), source.get("location"))
+        for source in sources
+    )
+    for doi in formalizes_dois
 ):
-    raise SystemExit("error: no formalization source cites Arrow's 1950 paper")
+    raise SystemExit("error: no formalization source cites the Gibbard (1973) and Satterthwaite (1975) papers")
 automation = metadata.get("automation")
 if not isinstance(automation, dict) or not isinstance(automation.get("methods"), list) or not automation["methods"]:
     raise SystemExit("error: automation.methods must be nonempty")

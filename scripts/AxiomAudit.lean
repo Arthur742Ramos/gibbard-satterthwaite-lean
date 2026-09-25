@@ -5,7 +5,7 @@ open Lean
 run_cmd do
   let env ← getEnv
   let names := (env.constants.toList.map Prod.fst).filter fun name =>
-    name.toString.startsWith "Arrow."
+    name.toString.startsWith "GibbardSatterthwaite."
   let names := names.toArray.qsort Name.lt
   for name in names do
     let axioms ← Lean.collectAxioms name
