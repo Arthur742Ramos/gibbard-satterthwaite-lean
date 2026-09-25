@@ -20,7 +20,8 @@ lean_lib GibbardSatterthwaite where
   roots := #[
     `GS.Basic,
     `GS.Reduction,
-    `GS.SWF]
+    `GS.SWF,
+    `GS.Main]
 
 lean_lib Challenge where
   roots := #[`Challenge]
