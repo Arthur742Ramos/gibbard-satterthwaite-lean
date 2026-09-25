@@ -1,0 +1,19 @@
+{
+  "challenge_module": "Challenge",
+  "definition_names": [
+    "GibbardSatterthwaite.SCF",
+    "GibbardSatterthwaite.StrategyProof",
+    "GibbardSatterthwaite.Onto",
+    "GibbardSatterthwaite.Dictatorial"
+  ],
+  "enable_nanoda": true,
+  "permitted_axioms": [
+    "propext",
+    "Quot.sound",
+    "Classical.choice"
+  ],
+  "solution_module": "Solution",
+  "theorem_names": [
+    "GibbardSatterthwaite.gibbardSatterthwaite"
+  ]
+}

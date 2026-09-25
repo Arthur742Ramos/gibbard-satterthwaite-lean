@@ -12,12 +12,13 @@ group contraction, and the main Arrow theorem with zero sorries and axioms
 limited to `propext`, `Classical.choice`, `Quot.sound`.
 
 `GS/Basic.lean` defines social choice functions, strategy-proofness, onto-ness,
-and dictatorship. `GS/Reduction.lean` builds a social welfare function from a
-strategy-proof onto SCF (via top-two profiles), shows it satisfies unanimity
-and IIA, applies Arrow to obtain a dictator, and transfers dictatorship back
-to the SCF.
+and dictatorship. `GS/SWF.lean` builds a social welfare function from a
+strategy-proof onto SCF; `GS/Reduction.lean` proves unanimity and IIA, applies
+Arrow to obtain a dictator, and transfers dictatorship back to the SCF.
 
-`Challenge.lean` / `Solution.lean` package the Palomar registry submission;
-see `comparator.json` and `formalization.yaml`.
+The Palomar package uses `Challenge.lean` for the self-contained statement
+module and `Solution.lean` for the proved library result. `comparator.json`
+lists the compared declarations, and `formalization.yaml` records the result's
+scope, sources, and alignment.
 
 Built with Lean 4 / Mathlib `v4.35.0-rc2`.

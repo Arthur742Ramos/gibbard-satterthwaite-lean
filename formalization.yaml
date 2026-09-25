@@ -1,0 +1,153 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Gibbard-Satterthwaite theorem (strategy-proof social choice)"
+  description: >-
+    Formalizes the Gibbard-Satterthwaite theorem for finite electorates and
+    finite alternative sets with at least three alternatives: every onto,
+    strategy-proof social choice function is dictatorial. The proof constructs
+    a social welfare function and reduces to Arrow's impossibility theorem.
+  authors:
+    - "Arthur Freitas Ramos"
+  license: "BSD-3-Clause"
+  responsible_maintainers:
+    - "Arthur Freitas Ramos"
+
+classification:
+  arxiv: ["math.LO", "cs.GT"]
+  msc2020: ["91B14"]
+
+sources:
+  - title: "Manipulation of voting schemes: A general result"
+    authors:
+      - "Allan Gibbard"
+    id: "https://doi.org/10.2307/1914083"
+    type: "article"
+    location: "https://doi.org/10.2307/1914083"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      The 1973 result that every non-dictatorial social choice scheme with at
+      least three alternatives is manipulable under the stated conditions.
+  - title: "Strategy-proofness and Arrow's conditions: Existence and correspondence theorems for voting procedures and social welfare functions"
+    authors:
+      - "Mark A. Satterthwaite"
+    id: "https://doi.org/10.1016/0022-0531(75)90002-6"
+    type: "article"
+    location: "https://doi.org/10.1016/0022-0531(75)90002-6"
+    relationship: "formalizes"
+    author_endorsement: "not-contacted"
+    note: >-
+      The 1975 strategy-proofness result formalized here in its social choice
+      function form.
+  - title: "A Difficulty in the Concept of Social Welfare"
+    authors:
+      - "Kenneth J. Arrow"
+    id: "https://doi.org/10.1086/256963"
+    type: "article"
+    location: "https://doi.org/10.1086/256963"
+    relationship: "background"
+    author_endorsement: "not-contacted"
+    note: >-
+      This development proves Gibbard-Satterthwaite by reducing the constructed
+      social welfare function to Arrow's theorem.
+
+related_formalizations:
+  - id: "https://palomar-registry.org/entry?id=PALOMAR-2026-09-25-000024&version=1"
+    relationship: "background"
+    note: >-
+      A registry search on 2026-09-25 over all 200 entries in
+      https://data.palomar-registry.org/recent.json and
+      https://data.palomar-registry.org/feed.xml (2026-09-01 to 2026-09-25)
+      found NO prior Gibbard-Satterthwaite formalizations. This is Arthur
+      Freitas Ramos's Arrow impossibility formalization, which this development
+      imports and uses in its reduction to Arrow's theorem.
+  - id: "https://palomar-registry.org/entry?id=PALOMAR-2026-09-01-000011&version=1"
+    relationship: "independent"
+    note: >-
+      Joris Roos's "Arrow's theorem via Fourier analysis" proves Arrow for
+      three-candidate elections via Fourier analysis, while this development
+      proves Gibbard-Satterthwaite by reduction to the decisive-coalition
+      Arrow proof.
+
+status:
+  scope: >-
+    The library formalizes finite profiles of strict rankings, strategy-proof
+    and onto social choice functions, dictatorship, and the
+    Gibbard-Satterthwaite theorem by reduction to Arrow's theorem. Challenge.lean
+    repeats the compared statements with one deliberate statement hole; that
+    statement hole is excluded from the implementation sorry_count.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Quot.sound", "Classical.choice"]
+
+automation:
+  methods:
+    - method: "agent"
+      models: ["gpt-6-luna (via Codex CLI)"]
+      framework: "Lean 4 and Mathlib"
+      tool_setup: "Pinned Lean 4 and Mathlib build with Comparator-ready Challenge and Solution modules."
+      cost:
+        wall_time: "not tracked"
+        spend_usd: "subscription-based"
+        hardware: "local machine"
+      prompting_notes: "The final definitions, statements, and proofs are checked by Lean's kernel."
+  spend_usd: "subscription-based"
+  notes: "AI assistance was used for proof engineering. The final definitions, statements, and proofs are checked by Lean's kernel."
+
+fidelity:
+  divergences: >-
+    The electorate and alternative set are finite, with at least three
+    alternatives. Strict rankings are represented as injective valuations
+    into the naturals. Strategy-proofness and onto-ness are formalized as in
+    the literature.
+
+alignment:
+  namespace: "GibbardSatterthwaite"
+  statements:
+    - source: "Social choice function"
+      lean: "GibbardSatterthwaite.SCF"
+      module: "GS/Basic.lean"
+      status: "defined"
+      note: "The exact comparator concept SCF: maps every ballot profile to a chosen alternative."
+    - source: "Strategy-proofness"
+      lean: "GibbardSatterthwaite.StrategyProof"
+      module: "GS/Basic.lean"
+      status: "defined"
+      note: "The exact comparator concept StrategyProof: no voter can obtain a strictly better outcome by misreporting their ballot."
+    - source: "Onto social choice function"
+      lean: "GibbardSatterthwaite.Onto"
+      module: "GS/Basic.lean"
+      status: "defined"
+      note: "The exact comparator concept Onto: every alternative is selected at some profile."
+    - source: "Dictatorship"
+      lean: "GibbardSatterthwaite.Dictatorial"
+      module: "GS/Basic.lean"
+      status: "defined"
+      note: "The exact comparator concept Dictatorial is top-choice agreement: some voter d's top-ranked alternative is always the social choice; equivalently, the outcome is ranked above every other alternative in d's ballot."
+    - source: "Gibbard-Satterthwaite theorem"
+      lean: "GibbardSatterthwaite.gibbardSatterthwaite"
+      module: "Solution.lean"
+      status: "proved"
+      note: >-
+        For exact theorem binders: (f : SCF V A) (hSP : StrategyProof f)
+        (hO : Onto f) (x y z : A) (hxy : x ≠ y) (hxz : x ≠ z)
+        (hyz : y ≠ z). Every onto strategy-proof social choice function is
+        dictatorial when the alternative type contains three distinct alternatives.
+
+acknowledgements: >-
+  Mathlib contributors; Allan Gibbard, Mark Satterthwaite, and Kenneth J. Arrow
+  for the source results; and the Palomar Registry project for the
+  statement/solution Comparator workflow.
+
+review:
+  status: "self-assessed"
+  reviewers:
+    - "none"
+  notes: >-
+    The implementation library and Solution are proof-hole-free under the
+    pinned local build. Challenge contains one deliberate statement hole,
+    excluded from the implementation sorry_count. Hosted Comparator
+    verification, Palomar editorial review, and registration are separate
+    states and are not inferred from local compilation.

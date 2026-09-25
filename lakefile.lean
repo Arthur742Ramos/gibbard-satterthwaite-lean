@@ -23,8 +23,10 @@ lean_lib GibbardSatterthwaite where
     `GS.SWF,
     `GS.Main]
 
+@[default_target]
 lean_lib Challenge where
   roots := #[`Challenge]
 
+@[default_target]
 lean_lib Solution where
   roots := #[`Solution]
