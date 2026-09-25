@@ -19,12 +19,11 @@ lean_lib Arrow where
 lean_lib GibbardSatterthwaite where
   roots := #[
     `GS.Basic,
-    `GS.Reduction]
+    `GS.Reduction,
+    `GS.SWF]
 
-@[default_target]
 lean_lib Challenge where
   roots := #[`Challenge]
 
-@[default_target]
 lean_lib Solution where
   roots := #[`Solution]
